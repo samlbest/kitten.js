@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: "./src/kitten.ts",
+  entry: "./src/index.ts",
   devtool: "inline-source-map",
   module: {
     rules: [
@@ -17,13 +17,21 @@ module.exports = {
         use: [
           'url-loader'
         ]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          "style-loader",
+          "css-loader"
+        ]
       }
     ]
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: "kitten.js"
+      title: "kitten.js",
+      template: 'template.html',
     })
   ],
   resolve: {
