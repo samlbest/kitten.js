@@ -1,4 +1,6 @@
 const path = require("path");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: "./src/kitten.ts",
@@ -18,6 +20,12 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: "kitten.js"
+    })
+  ],
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".json"]
   },
