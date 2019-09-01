@@ -3,6 +3,8 @@ import CatSprite from "./sprites/catSprite";
 import Point from "./graphics/point";
 import Size from "./graphics/size";
 import Vector from "./graphics/vector";
+import Sprite from "./graphics/sprite";
+import Utilities from "./graphics/utilities";
 
 export default class Kitten {
   readonly version = "0.01";
@@ -12,7 +14,6 @@ export default class Kitten {
   private canvas: HTMLCanvasElement;
   private spriteMap: SpriteMap;
   private loop: any;
-  private spawnButton: HTMLElement;
 
   constructor() {
     this.init();
@@ -20,11 +21,21 @@ export default class Kitten {
 
   private init(): void {
     this.canvas = this.createCanvas();
-    this.spawnButton = this.createSpawnButton();
+    this.createSpawnButton();
+    this.createPausePlayButton();
 
     this.spriteMap = new SpriteMap(this.canvas);
     this.startLoop();
   }
+
+  private startOrStopLoop(): void {
+    if (!this.loop) {
+      this.startLoop();
+    }
+    else {
+      this.endLoop();
+    }
+  };
 
   private startLoop(): void {
     if (!this.loop) {
@@ -59,6 +70,24 @@ export default class Kitten {
     return button;
   };
 
+  private createPausePlayButton(): HTMLElement {
+    var button = document.createElement("div");
+    this.container.appendChild(button);
+    button.style.right = "13px";
+    button.style.top = "6px";
+    button.style.width = "5px";
+    button.style.height = "5px";
+    button.style.background = "#921efc";
+    button.style.position = "absolute";
+    button.style.zIndex = "10000";
+    button.style.cursor = "pointer";
+    button.style.borderRadius = "2.5px";
+    button.style.pointerEvents = "all";
+    button.onclick = this.startOrStopLoop.bind(this);
+
+    return button;
+  };
+
   private spawn(): void {
     let options = {
       context: this.canvasContext(),
@@ -67,11 +96,24 @@ export default class Kitten {
       maxDirectionalSpeed: 10
     };
 
-    let sprite = new CatSprite(options);
+    let sprite = this.getRandomSprite();
 
     sprite.vector = new Vector(5.0, 5.0);
 
     this.spriteMap.addSprite(sprite);
+  }
+
+  private getRandomSprite(): Sprite {
+    let options = {
+      context: this.canvasContext(),
+      position: new Point(55, 55),
+      size: new Size(50.0, 50.0),
+      maxDirectionalSpeed: 10
+    };
+
+    let sprites = [new CatSprite(options), new Sprite(options)];
+
+    return sprites[Utilities.randomIntFromInterval(0, sprites.length - 1)];
   }
 
   private createCanvas(): HTMLCanvasElement {
