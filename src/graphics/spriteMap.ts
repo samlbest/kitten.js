@@ -11,23 +11,26 @@ export default class SpriteMap {
   }
 
   redrawSprites(): void {
+    let domElements = this.getAllDomElements();
+
     this.sprites.forEach(sprite => {
-      
+      let obstacles: Array<Rectangle> = domElements.concat(this.sprites.filter(element => element != sprite));
 
-      this.sprites.filter(element => element != sprite).forEach(other => {
-        if (sprite.intersects(other)) {
-          console.log("it intersects");
-
-          sprite.reverseVector();
-          other.reverseVector();
+      obstacles.forEach(other => {
+        if (other instanceof Sprite) {
+          sprite.bounceOffRectangleIfIntersecting(other);
+          (other as Sprite).bounceOffRectangleIfIntersecting(sprite);
+        }
+        else {
+          sprite.bounceOffRectangleIfIntersecting(other);
         }
       });
 
-      if (sprite.intersectsHorizontalEdge()) {
+      if (sprite.intersectsContainerHorizontalBound()) {
         sprite.reverseYVector();
       }
 
-      if (sprite.intersectsVerticalEdge()) {
+      if (sprite.intersectsContainerVerticalBound()) {
         sprite.reverseXVector();
       }
 
@@ -44,22 +47,23 @@ export default class SpriteMap {
       );
 
       this.sprites.push(sprite);
+      sprite.render();
     }
   }
 
   getAllDomElements(): Rectangle[] {
-    var allElements: any = document.body.getElementsByTagName('*');
+    let allElements: any = document.body.getElementsByTagName('*');
     var objects = new Array<Rectangle>();
 
     for (var i = 0; i < allElements.length; ++i) {
-      var element = allElements[i];
-      var x = element.offsetLeft;
-      var y = element.offsetTop;
-      var width = element.offsetWidth;
-      var height = element.offsetHeight;
+      let element = allElements[i];
+      let x = element.offsetLeft;
+      let y = element.offsetTop;
+      let width = element.offsetWidth;
+      let height = element.offsetHeight;
 
-      var position = new Point(x, y);
-      var size = new Size(width, height);
+      let position = new Point(x, y);
+      let size = new Size(width, height);
 
       if (x != 0 && y != 0 && width != 0 && height != 0) {
         objects.push(new Rectangle(position.x, position.y, size.width, size.height));

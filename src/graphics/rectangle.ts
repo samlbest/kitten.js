@@ -17,6 +17,23 @@ export default class Rectangle {
       && this.top() <= other.bottom() && this.bottom() >= other.top();
   }
 
+  
+  intersectsLeft(other: Rectangle): boolean {
+    return this.right() === other.left();
+  }
+
+  intersectsRight(other: Rectangle): boolean {
+    return this.left() === other.right();
+  }
+
+  intersectsTop(other: Rectangle): boolean {
+    return this.bottom() === other.top();
+  }
+
+  intersectsBottom(other: Rectangle): boolean {
+    return this.top() === other.bottom();
+  }
+
   left(): number {
     return this.position.x;
   }

@@ -1,14 +1,9 @@
-import Sprite from "../graphics/sprite";
 import Cat from "./cat-small.png";
+import ImageSprite from "../graphics/imageSprite";
+import SpriteOptions from "../graphics/spriteOptions";
 
-export default class CatSprite extends Sprite {
-  protected render(): void {
-    var img = new Image();
-    img.src = Cat;
-    this.canvasContext.drawImage(img,
-      this.position.x,
-      this.position.y,
-      this.size.width,
-      this.size.height);
-  }
+export default class CatSprite extends ImageSprite {
+    constructor(spriteOptions: SpriteOptions) {
+      super(Cat, spriteOptions);
+    }
 }

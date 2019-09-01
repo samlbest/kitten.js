@@ -19,8 +19,6 @@ export default class Sprite extends Rectangle {
     this.maxDirectionalSpeed = options.maxDirectionalSpeed;
 
     this.updateLastPosition();
-
-    this.render();
   }
 
   set container(container: Rectangle) {
@@ -128,17 +126,38 @@ export default class Sprite extends Rectangle {
     this.vector = newVector;
   }
 
-  intersectsHorizontalEdge(): boolean {
-    return (this.position.y + this.size.height == this.container.size.height && this.vector.y > 0) ||
+  bounceOffRectangleIfIntersecting(rectangle: Rectangle) {
+    let yRect = new Rectangle(this.position.x, this.position.y + this.vector.y, this.size.width, this.size.height);
+    let xRect = new Rectangle(this.position.x + this.vector.x, this.position.y, this.size.width, this.size.height);
+
+    if (yRect.intersects(rectangle)) {
+      this.reverseYVector();
+    }
+
+    if (xRect.intersects(rectangle)) {
+      this.reverseXVector();
+    }
+  }
+
+  intersectsHorizontalEdge(rectangle: Rectangle) {
+    return (this.position.y + this.size.height == rectangle.size.height && this.vector.y > 0) ||
       (this.position.y == 0 && this.vector.y < 0);
   }
 
-  intersectsVerticalEdge(): boolean {
-    return (this.position.x + this.size.width == this.container.size.width && this.vector.x > 0) ||
+  intersectsVerticalEdge(rectangle: Rectangle) {
+    return (this.position.x + this.size.width == rectangle.size.width && this.vector.x > 0) ||
       (this.position.x == 0 && this.vector.x < 0);
   }
 
-  protected render(): void {
+  intersectsContainerHorizontalBound(): boolean {
+    return this.intersectsHorizontalEdge(this.container);
+  }
+
+  intersectsContainerVerticalBound(): boolean {
+    return this.intersectsVerticalEdge(this.container);
+  }
+
+  render(): void {
     this.canvasContext.beginPath();
     this.canvasContext.fillStyle = 'green';
     this.canvasContext.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
