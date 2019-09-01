@@ -1,5 +1,5 @@
-import Sprite from "./sprite";
-import SpriteOptions from "./spriteOptions";
+import Sprite from "../graphics/sprite";
+import SpriteOptions from "../graphics/spriteOptions";
 
 export default class ImageSprite extends Sprite {
   constructor(private imagePath: string, spriteOptions: SpriteOptions) {

@@ -1,9 +1,9 @@
-import Cat from "./images/cat.svg";
+import Dog from "./images/dog.svg";
 import ImageSprite from "./imageSprite";
 import SpriteOptions from "../graphics/spriteOptions";
 
-export default class CatSprite extends ImageSprite {
+export default class DogSprite extends ImageSprite {
     constructor(spriteOptions: SpriteOptions) {
-      super(Cat, spriteOptions);
+      super(Dog, spriteOptions);
     }
 }

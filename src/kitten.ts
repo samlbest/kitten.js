@@ -5,6 +5,9 @@ import Size from "./graphics/size";
 import Vector from "./graphics/vector";
 import Sprite from "./graphics/sprite";
 import Utilities from "./graphics/utilities";
+import JarSprite from "./sprites/jarSprite";
+import DogSprite from "./sprites/dogSprite";
+import ColorChangingRectangleSprite from "./sprites/colorChangingRectangleSprite";
 
 export default class Kitten {
   readonly version = "0.01";
@@ -93,6 +96,7 @@ export default class Kitten {
   }
 
   private getRandomSprite(): Sprite {
+    
     let speed = Utilities.randomFloatFromInterval(1, 5);
     let size = Utilities.randomFloatFromInterval(15, 150);
 
@@ -104,8 +108,7 @@ export default class Kitten {
       initialVector: new Vector(speed, speed)
     };
 
-    let sprites = [new CatSprite(options), new Sprite(options)];
-
+    let sprites = [new CatSprite(options), new DogSprite(options), new JarSprite(options), new ColorChangingRectangleSprite(1000, options)];
     return sprites[Utilities.randomIntFromInterval(0, sprites.length - 1)];
   }
 
