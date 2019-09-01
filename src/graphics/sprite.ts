@@ -5,7 +5,7 @@ import Vector from "./vector";
 import Point from "./point";
 
 export default class Sprite extends Rectangle {
-  private canvasContext: CanvasRenderingContext2D;
+  protected canvasContext: CanvasRenderingContext2D;
   private _vector: Vector = new Vector(0, 0);
   private maxDirectionalSpeed: number;
   private lastPosition: Point;

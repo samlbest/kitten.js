@@ -1,6 +1,5 @@
 import SpriteMap from "./graphics/spritemap";
-import Sprite from "./graphics/sprite";
-import SpriteOptions from "./graphics/spriteOptions";
+import CatSprite from "./sprites/catSprite";
 import Point from "./graphics/point";
 import Size from "./graphics/size";
 import Vector from "./graphics/vector";
@@ -68,7 +67,7 @@ export default class Kitten {
       maxDirectionalSpeed: 10
     };
 
-    let sprite = new Sprite(options);
+    let sprite = new CatSprite(options);
 
     sprite.vector = new Vector(5.0, 5.0);
 
