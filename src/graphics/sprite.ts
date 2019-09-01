@@ -5,78 +5,153 @@ import Vector from "./vector";
 import Point from "./point";
 
 export default class Sprite extends Rectangle {
-    private canvasContext: CanvasRenderingContext2D;
-    private _vector: Vector = new Vector(0, 0);
-    private maxDirectionalSpeed: number;
-    private lastPosition: Point;
-    
-    constructor(options: SpriteOptions) {
-        super(options.position, options.size);
+  private canvasContext: CanvasRenderingContext2D;
+  private _vector: Vector = new Vector(0, 0);
+  private maxDirectionalSpeed: number;
+  private lastPosition: Point;
+  private _container: Rectangle;
 
-        this.canvasContext = options.context;
-        this.vector = new Vector(0, 0);
-        this.maxDirectionalSpeed = options.maxDirectionalSpeed;
+  constructor(options: SpriteOptions) {
+    super(options.position, options.size);
 
-        this.updateLastPosition();
-        
-        this.render();
+    this.canvasContext = options.context;
+    this.vector = new Vector(0, 0);
+    this.maxDirectionalSpeed = options.maxDirectionalSpeed;
+
+    this.updateLastPosition();
+
+    this.render();
+  }
+
+  set container(container: Rectangle) {
+    this._container = container;
+  }
+
+  get container(): Rectangle {
+    return this._container;
+  }
+
+  getNextPosition(): Point {
+    return new Point(this.position.x + this.vector.x, this.position.y + this.vector.y);
+  }
+
+  updateLastPosition(): void {
+    if (!this.lastPosition) {
+      this.lastPosition = new Point(this.position.x, this.position.y);
+      return;
     }
 
-    updateLastPosition(): void {
-        if (!this.lastPosition) {
-            this.lastPosition = new Point(this.position.x, this.position.y);
-            return;
-        }
+    this.lastPosition.x = this.position.x;
+    this.lastPosition.y = this.position.y;
+  }
 
-        this.lastPosition.x = this.position.x;
-        this.lastPosition.y = this.position.y;
+  updatePosition(newPosition: Point) {
+    this.updateLastPosition();
+
+    this.position.x = newPosition.x;
+    this.position.y = newPosition.y;
+  }
+
+  correctedOffset(spritePosition: Point) {
+    let xOffset = 0;
+    let yOffset = 0;
+
+    let containerSize = this.container.size;
+    let containerOrigin = this.container.position;
+
+    let nextPosition = spritePosition;
+
+    // Need to increase current x-position to correct.
+    if (nextPosition.x < containerOrigin.x) {
+      xOffset = containerOrigin.x - nextPosition.x;
     }
 
-    updatePosition(newPosition: Point) {
-        this.updateLastPosition();
-
-        this.position.x = newPosition.x;
-        this.position.y = newPosition.y;
+    // Need to decrease current x-position to correct.
+    else if (nextPosition.x + this.size.width > containerOrigin.x + containerSize.width) {
+      xOffset = containerOrigin.x + containerSize.width - nextPosition.x - this.size.width;
     }
 
-    set vector(newVector: Vector) {
-        this._vector.x = Math.abs(newVector.x) > this.maxDirectionalSpeed ? this.maxDirectionalSpeed : newVector.x;
-        this._vector.y = Math.abs(newVector.y) > this.maxDirectionalSpeed ? this.maxDirectionalSpeed : newVector.y;
+    // Need to increase current y-position to correct.
+    if (nextPosition.y < containerOrigin.y) {
+      yOffset = containerOrigin.y - nextPosition.y;
     }
 
-    get vector(): Vector {
-        return this._vector;
+    // Need to decrease current y-position to correct.
+    else if (nextPosition.y + this.size.height > containerOrigin.y + containerSize.height) {
+      yOffset = containerOrigin.y + containerSize.height - nextPosition.y - this.size.height;
     }
 
-    move(): void {
-        this.moveTo(new Point(this.position.x + this.vector.x, this.position.y + this.vector.y));
-    }
+    return new Point(xOffset, yOffset);
+  };
 
-    moveTo(newPosition: Point): void {
-        this.canvasContext.clearRect(this.position.x, this.position.y, this.size.width, this.size.height);
-        this.position = newPosition;
-        this.render();
-    }
+  set vector(newVector: Vector) {
+    this._vector.x = Math.abs(newVector.x) > this.maxDirectionalSpeed ? this.maxDirectionalSpeed : newVector.x;
+    this._vector.y = Math.abs(newVector.y) > this.maxDirectionalSpeed ? this.maxDirectionalSpeed : newVector.y;
+  }
 
-    randomizeVector(): void {
-        var newVector = new Vector(this.vector.x + Utilities.randomIntFromInterval(-3, 3),
-            this.vector.y + Utilities.randomIntFromInterval(-3, 3));
+  get vector(): Vector {
+    return this._vector;
+  }
 
-        this.vector = newVector;
-    }
+  move(): void {
+    let nextPosition = this.getNextPosition();
+    let correctedOffset = this.correctedOffset(nextPosition);
+    let finalPosition = new Point(nextPosition.x + correctedOffset.x,
+      nextPosition.y + correctedOffset.y);
 
-    protected render(): void {
-        this.canvasContext.beginPath();
-        this.canvasContext.fillStyle = 'green';
-        this.canvasContext.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
-        this.canvasContext.closePath();
-    }
-    
-    protected setPosition(newPosition: Point): void {
-        this.lastPosition.x = this.position.x;
-        this.lastPosition.y = this.position.y;
+    console.log(`moving from ${this.position.x}, ${this.position.y} to ${finalPosition.x}, ${finalPosition.y}`);
 
-        this.position.x = newPosition.x;
-        this.position.y = newPosition.y;
-    }
+    this.moveTo(finalPosition);
+  }
+
+  moveTo(newPosition: Point): void {
+    this.canvasContext.clearRect(this.position.x, this.position.y, this.size.width, this.size.height);
+    this.position = newPosition;
+    this.render();
+  }
+
+  reverseXVector(): void {
+    this.vector = new Vector(this.vector.x * -1, this.vector.y);
+  }
+
+  reverseYVector(): void {
+    this.vector = new Vector(this.vector.x, this.vector.y * -1);
+  }
+
+  reverseVector(): void {
+    this.reverseXVector();
+    this.reverseYVector();
+  }
+
+  randomizeVector(): void {
+    var newVector = new Vector(this.vector.x + Utilities.randomIntFromInterval(-3, 3),
+      this.vector.y + Utilities.randomIntFromInterval(-3, 3));
+
+    this.vector = newVector;
+  }
+
+  intersectsHorizontalEdge(): boolean {
+    return (this.position.y + this.size.height == this.container.size.height && this.vector.y > 0) ||
+      (this.position.y == 0 && this.vector.y < 0);
+  }
+
+  intersectsVerticalEdge(): boolean {
+    return (this.position.x + this.size.width == this.container.size.width && this.vector.x > 0) ||
+      (this.position.x == 0 && this.vector.x < 0);
+  }
+
+  protected render(): void {
+    this.canvasContext.beginPath();
+    this.canvasContext.fillStyle = 'green';
+    this.canvasContext.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
+    this.canvasContext.closePath();
+  }
+
+  protected setPosition(newPosition: Point): void {
+    this.lastPosition.x = this.position.x;
+    this.lastPosition.y = this.position.y;
+
+    this.position.x = newPosition.x;
+    this.position.y = newPosition.y;
+  }
 }
