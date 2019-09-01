@@ -4,18 +4,16 @@ import Point from "./point";
 import Size from "./size";
 
 export default class SpriteMap {
-  constructor(private canvas: HTMLCanvasElement, private maxSprites: number = 10, private sprites: Sprite[] = []) {
+  constructor(private canvas: HTMLCanvasElement, private maxSprites: number = 10, 
+    private mapDomElements: boolean = false, private sprites: Sprite[] = []) {
     this.canvas = canvas;
     this.maxSprites = maxSprites;
     this.sprites = sprites;
   }
 
   redrawSprites(): void {
-    let domElements = this.getAllDomElements();
-
     this.sprites.forEach(sprite => {
-      let obstacles: Array<Rectangle> = domElements.concat(this.sprites.filter(element => element != sprite));
-
+      let obstacles = this.getAllObstacles(sprite);
       obstacles.forEach(other => {
         if (other instanceof Sprite) {
           sprite.bounceOffRectangleIfIntersecting(other);
@@ -45,12 +43,25 @@ export default class SpriteMap {
     }
   }
 
+  getAllObstacles(currentSprite: Sprite): Rectangle[] {
+    var elements: Rectangle[] = new Array<Rectangle>();
+    if (this.mapDomElements) {
+      elements = this.getAllDomElements();
+    }
+
+    return elements.concat(this.sprites.filter(element => element != currentSprite));
+  }
+
   getAllDomElements(): Rectangle[] {
-    let allElements: any = document.body.getElementsByTagName('*');
+    let allElements: any = document.body.getElementsByTagName("div");
     var objects = new Array<Rectangle>();
 
     for (var i = 0; i < allElements.length; ++i) {
-      let element = allElements[i];
+      let element = allElements[i] as HTMLElement;
+      if (element === null || element.offsetParent === null) {
+        continue;
+      }
+
       let x = element.offsetLeft;
       let y = element.offsetTop;
       let width = element.offsetWidth;

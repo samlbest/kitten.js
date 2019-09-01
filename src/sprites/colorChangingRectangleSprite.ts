@@ -3,7 +3,7 @@ import SpriteOptions from "../graphics/spriteOptions";
 import Utilities from "../graphics/utilities";
 
 export default class ColorChangingRectangleSprite extends Sprite {
-  private color: string;
+  private color: string = Utilities.getRandomColor();
 
   constructor(colorChangeIntervalMs: number, options: SpriteOptions) {
     super(options);

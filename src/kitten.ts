@@ -102,7 +102,7 @@ export default class Kitten {
 
     let options = {
       context: this.canvasContext(),
-      position: new Point(0, 0),
+      position: new Point(1, 1),
       size: new Size(size, size),
       maxDirectionalSpeed: 5,
       initialVector: new Vector(speed, speed)
