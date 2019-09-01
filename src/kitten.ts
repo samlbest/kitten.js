@@ -24,7 +24,7 @@ export default class Kitten {
     this.createSpawnButton();
     this.createPausePlayButton();
 
-    this.spriteMap = new SpriteMap(this.canvas);
+    this.spriteMap = new SpriteMap(this.canvas, 50);
     this.startLoop();
   }
 
@@ -41,7 +41,7 @@ export default class Kitten {
     if (!this.loop) {
       this.loop = setInterval(() => {
         this.spriteMap.redrawSprites();
-      }, 25);
+      }, 8);
     }
   };
 
@@ -89,26 +89,19 @@ export default class Kitten {
   };
 
   private spawn(): void {
-    let options = {
-      context: this.canvasContext(),
-      position: new Point(55, 55),
-      size: new Size(50.0, 50.0),
-      maxDirectionalSpeed: 10
-    };
-
-    let sprite = this.getRandomSprite();
-
-    sprite.vector = new Vector(5.0, 5.0);
-
-    this.spriteMap.addSprite(sprite);
+    this.spriteMap.addSprite(this.getRandomSprite());
   }
 
   private getRandomSprite(): Sprite {
+    let speed = Utilities.randomFloatFromInterval(1, 5);
+    let size = Utilities.randomFloatFromInterval(15, 150);
+
     let options = {
       context: this.canvasContext(),
-      position: new Point(55, 55),
-      size: new Size(50.0, 50.0),
-      maxDirectionalSpeed: 10
+      position: new Point(0, 0),
+      size: new Size(size, size),
+      maxDirectionalSpeed: 5,
+      initialVector: new Vector(speed, speed)
     };
 
     let sprites = [new CatSprite(options), new Sprite(options)];

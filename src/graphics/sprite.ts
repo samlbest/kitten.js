@@ -15,8 +15,8 @@ export default class Sprite extends Rectangle {
     super(options.position.x, options.position.y, options.size.width, options.size.height);
 
     this.canvasContext = options.context;
-    this.vector = new Vector(0, 0);
     this.maxDirectionalSpeed = options.maxDirectionalSpeed;
+    this.vector = options.initialVector;
 
     this.updateLastPosition();
   }
@@ -50,38 +50,6 @@ export default class Sprite extends Rectangle {
     this.position.y = newPosition.y;
   }
 
-  correctedOffset(spritePosition: Point) {
-    let xOffset = 0;
-    let yOffset = 0;
-
-    let containerSize = this.container.size;
-    let containerOrigin = this.container.position;
-
-    let nextPosition = spritePosition;
-
-    // Need to increase current x-position to correct.
-    if (nextPosition.x < containerOrigin.x) {
-      xOffset = containerOrigin.x - nextPosition.x;
-    }
-
-    // Need to decrease current x-position to correct.
-    else if (nextPosition.x + this.size.width > containerOrigin.x + containerSize.width) {
-      xOffset = containerOrigin.x + containerSize.width - nextPosition.x - this.size.width;
-    }
-
-    // Need to increase current y-position to correct.
-    if (nextPosition.y < containerOrigin.y) {
-      yOffset = containerOrigin.y - nextPosition.y;
-    }
-
-    // Need to decrease current y-position to correct.
-    else if (nextPosition.y + this.size.height > containerOrigin.y + containerSize.height) {
-      yOffset = containerOrigin.y + containerSize.height - nextPosition.y - this.size.height;
-    }
-
-    return new Point(xOffset, yOffset);
-  };
-
   set vector(newVector: Vector) {
     this._vector.x = Math.abs(newVector.x) > this.maxDirectionalSpeed ? this.maxDirectionalSpeed : newVector.x;
     this._vector.y = Math.abs(newVector.y) > this.maxDirectionalSpeed ? this.maxDirectionalSpeed : newVector.y;
@@ -92,16 +60,11 @@ export default class Sprite extends Rectangle {
   }
 
   move(): void {
-    let nextPosition = this.getNextPosition();
-    let correctedOffset = this.correctedOffset(nextPosition);
-    let finalPosition = new Point(nextPosition.x + correctedOffset.x,
-      nextPosition.y + correctedOffset.y);
-
-    this.moveTo(finalPosition);
+    this.moveTo(this.getNextPosition());
   }
 
   moveTo(newPosition: Point): void {
-    this.canvasContext.clearRect(this.position.x, this.position.y, this.size.width, this.size.height);
+    this.canvasContext.clearRect(this.position.x - 1, this.position.y - 1, this.size.width + 2, this.size.height + 2);
     this.position = newPosition;
     this.render();
   }
@@ -126,7 +89,7 @@ export default class Sprite extends Rectangle {
     this.vector = newVector;
   }
 
-  bounceOffRectangleIfIntersecting(rectangle: Rectangle) {
+  bounceOffRectangleIfIntersecting(rectangle: Rectangle): void {
     let yRect = new Rectangle(this.position.x, this.position.y + this.vector.y, this.size.width, this.size.height);
     let xRect = new Rectangle(this.position.x + this.vector.x, this.position.y, this.size.width, this.size.height);
 
@@ -139,22 +102,24 @@ export default class Sprite extends Rectangle {
     }
   }
 
-  intersectsHorizontalEdge(rectangle: Rectangle) {
-    return (this.position.y + this.size.height == rectangle.size.height && this.vector.y > 0) ||
-      (this.position.y == 0 && this.vector.y < 0);
+  bounceOffContainer(): void {
+    if (this.willCollideLeftOrRight()) {
+      this.reverseXVector();
+    }
+
+    if (this.willCollideTopOrBottom()) {
+      this.reverseYVector();
+    }
   }
 
-  intersectsVerticalEdge(rectangle: Rectangle) {
-    return (this.position.x + this.size.width == rectangle.size.width && this.vector.x > 0) ||
-      (this.position.x == 0 && this.vector.x < 0);
+  willCollideTopOrBottom(): boolean {
+    let yRect = new Rectangle(this.position.x, this.position.y + this.vector.y, this.size.width, this.size.height);
+    return (yRect.position.y < 0 || yRect.position.y + yRect.size.height > this.container.size.height)
   }
 
-  intersectsContainerHorizontalBound(): boolean {
-    return this.intersectsHorizontalEdge(this.container);
-  }
-
-  intersectsContainerVerticalBound(): boolean {
-    return this.intersectsVerticalEdge(this.container);
+  willCollideLeftOrRight(): boolean {
+    let xRect = new Rectangle(this.position.x + this.vector.x, this.position.y, this.size.width, this.size.height);
+    return (xRect.position.x < 0 || xRect.position.x + xRect.size.width > this.container.size.width)
   }
 
   render(): void {

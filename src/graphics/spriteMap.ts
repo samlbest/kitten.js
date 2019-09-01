@@ -26,13 +26,7 @@ export default class SpriteMap {
         }
       });
 
-      if (sprite.intersectsContainerHorizontalBound()) {
-        sprite.reverseYVector();
-      }
-
-      if (sprite.intersectsContainerVerticalBound()) {
-        sprite.reverseXVector();
-      }
+      sprite.bounceOffContainer();
 
       sprite.move();
     });
