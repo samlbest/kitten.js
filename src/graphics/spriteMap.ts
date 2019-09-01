@@ -12,10 +12,12 @@ export default class SpriteMap {
 
   redrawSprites(): void {
     this.sprites.forEach(sprite => {
-      sprite.move();
+      
 
       this.sprites.filter(element => element != sprite).forEach(other => {
         if (sprite.intersects(other)) {
+          console.log("it intersects");
+
           sprite.reverseVector();
           other.reverseVector();
         }
@@ -28,14 +30,17 @@ export default class SpriteMap {
       if (sprite.intersectsVerticalEdge()) {
         sprite.reverseXVector();
       }
+
+      sprite.move();
     });
   }
 
   addSprite(sprite: Sprite): void {
     if (this.sprites.length < this.maxSprites) {
-      sprite.container = new Rectangle(
-        new Point(this.canvas.offsetLeft, this.canvas.offsetTop), 
-        new Size(this.canvas.scrollWidth, this.canvas.scrollHeight)
+      sprite.container = new Rectangle(this.canvas.offsetLeft, 
+        this.canvas.offsetTop, 
+        this.canvas.scrollWidth, 
+        this.canvas.scrollHeight
       );
 
       this.sprites.push(sprite);
@@ -57,7 +62,7 @@ export default class SpriteMap {
       var size = new Size(width, height);
 
       if (x != 0 && y != 0 && width != 0 && height != 0) {
-        objects.push(new Rectangle(position, size));
+        objects.push(new Rectangle(position.x, position.y, size.width, size.height));
       }
     }
 

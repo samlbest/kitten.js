@@ -2,29 +2,34 @@ import Point from "./point";
 import Size from "./size";
 
 export default class Rectangle {
-  constructor(public position: Point, public size: Size) {
-    this.position = position;
-    this.size = size;
+  public position: Point;
+  public size: Size;
+
+
+
+  constructor(x: number, y: number, width: number, height: number) {
+    this.position = new Point(x, y);
+    this.size = new Size(width, height);
   }
 
-  intersects(other: Rectangle): boolean {
-    return this.topLeft().x < other.topRight().x && this.topRight().x > other.topLeft().x
-      && this.topLeft().y > other.bottomLeft().y && this.bottomLeft().y > other.topLeft().y;
+  intersects(other: Rectangle): boolean { 
+    return this.left() <= other.right() && this.right() >= other.left() 
+      && this.top() <= other.bottom() && this.bottom() >= other.top();
   }
 
-  topLeft(): Point {
-    return new Point(this.position.x, this.position.y);
+  left(): number {
+    return this.position.x;
   }
 
-  topRight(): Point {
-    return new Point(this.position.x + this.size.width, this.position.y);
+  right(): number {
+    return this.position.x + this.size.width;
   }
 
-  bottomLeft(): Point {
-    return new Point(this.position.x, this.position.y + this.size.height);
+  bottom(): number {
+    return this.position.y + this.size.height;
   }
 
-  bottomRight(): Point {
-    return new Point(this.position.x + this.size.width, this.position.y + this.size.height);
+  top(): number {
+    return this.position.y;
   }
 }

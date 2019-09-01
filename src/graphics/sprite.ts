@@ -12,7 +12,7 @@ export default class Sprite extends Rectangle {
   private _container: Rectangle;
 
   constructor(options: SpriteOptions) {
-    super(options.position, options.size);
+    super(options.position.x, options.position.y, options.size.width, options.size.height);
 
     this.canvasContext = options.context;
     this.vector = new Vector(0, 0);
@@ -98,8 +98,6 @@ export default class Sprite extends Rectangle {
     let correctedOffset = this.correctedOffset(nextPosition);
     let finalPosition = new Point(nextPosition.x + correctedOffset.x,
       nextPosition.y + correctedOffset.y);
-
-    console.log(`moving from ${this.position.x}, ${this.position.y} to ${finalPosition.x}, ${finalPosition.y}`);
 
     this.moveTo(finalPosition);
   }
