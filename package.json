@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "test": "jest",
+    "ci-test": "jest --ci --reporters=default --reporters=jest-junit",
     "build": "webpack --config webpack.prod.js"
   },
   "keywords": [],

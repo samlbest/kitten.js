@@ -18,13 +18,13 @@ steps:
 - script: |
     npm install
     npm run build
-  displayName: 'npm install, run webpack'
+  displayName: 'Webpack build'
 
-- script: jest --ci --reporters=default --reporters=jest-junit
+- script: npm run ci-test
   displayName: 'Run tests'
 
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
     testRunner: JUnit
-    testResultsFiles: '**/TEST-RESULTS.xml'
+    testResultsFiles: '**/junit.xml'
