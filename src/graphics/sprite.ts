@@ -67,8 +67,6 @@ export default class Sprite extends Rectangle {
     let nextPosition = this.getNextPosition();
     let yRect = new Rectangle(this.position.x, nextPosition.y, this.size.width, this.size.height);
     let xRect = new Rectangle(nextPosition.x, this.position.y, this.size.width, this.size.height);
-    let nextRect = new Rectangle(nextPosition.x, nextPosition.y, 
-      this.size.width, this.size.height);
     
     let bounced = false;
 
@@ -81,12 +79,6 @@ export default class Sprite extends Rectangle {
       this.reverseXVector();
       bounced = true;
     }
-
-    if (!bounced && nextRect.intersects(rectangle)) {
-      this.reverseVector();
-      bounced = true;
-    }
-
 
     return bounced;
   }

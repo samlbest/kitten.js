@@ -96,21 +96,6 @@ test("bounceOffRectangleIfIntersecting_should_not_change", () => {
   expect(sprite.vector.equals(expectedVector)).toBe(true);
 });
 
-test("bounceOffRectangleIfIntersecting_should_reverse_both", () => {
-  let vector = new Vector(1, 1);
-  let expectedVector = new Vector(-1, -1);
-  let spritePosition = new Point(10, 10);
-  let spriteSize = new Size(10, 10);
-
-  let obstacle = new Rectangle(21, 21, 50, 50);
-
-  let sprite = getSprite(spritePosition.x, spritePosition.y,
-    spriteSize.width, spriteSize.height, 10, vector.x, vector.y);
-
-  expect(sprite.bounceOffRectangleIfIntersecting(obstacle)).toBe(true);
-  expect(sprite.vector.equals(expectedVector)).toBe(true);
-});
-
 test("bounceOffRectangleIfIntersecting_should_reversex_right", () => {
   let vector = new Vector(1, 1);
   let expectedVector = new Vector(-1, 1);
