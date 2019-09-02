@@ -35,32 +35,32 @@ test("equals_should_return_false_4", () => {
   expect(rectangleOne.equals(rectangleTwo)).toBe(false);
 });
 
-test("equals_should_return_true_5", () => {
+test("equals_should_return_false_5", () => {
   let rectangleOne = new Rectangle(1, 50, 50, 50);
   let rectangleTwo = new Rectangle(50, 50, 50, 50);
   
-  expect(rectangleOne.equals(rectangleTwo)).toBe(true);
+  expect(rectangleOne.equals(rectangleTwo)).toBe(false);
 });
 
-test("equals_should_return_true_6", () => {
+test("equals_should_return_false_6", () => {
   let rectangleOne = new Rectangle(50, 1, 50, 50);
   let rectangleTwo = new Rectangle(50, 50, 50, 50);
   
-  expect(rectangleOne.equals(rectangleTwo)).toBe(true);
+  expect(rectangleOne.equals(rectangleTwo)).toBe(false);
 });
 
-test("equals_should_return_true_7", () => {
+test("equals_should_return_false_7", () => {
   let rectangleOne = new Rectangle(50, 50, 1, 50);
   let rectangleTwo = new Rectangle(50, 50, 50, 50);
   
-  expect(rectangleOne.equals(rectangleTwo)).toBe(true);
+  expect(rectangleOne.equals(rectangleTwo)).toBe(false);
 });
 
-test("equals_should_return_true_8", () => {
+test("equals_should_return_false_8", () => {
   let rectangleOne = new Rectangle(50, 50, 50, 1);
   let rectangleTwo = new Rectangle(50, 50, 50, 50);
   
-  expect(rectangleOne.equals(rectangleTwo)).toBe(true);
+  expect(rectangleOne.equals(rectangleTwo)).toBe(false);
 });
 
 test("intersects_should_return_true_same_dimensions", () => {

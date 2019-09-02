@@ -1,4 +1,3 @@
-import Utilities from "./utilities";
 import SpriteOptions from "./spriteOptions";
 import Rectangle from "./rectangle";
 import Vector from "./vector";
@@ -17,8 +16,6 @@ export default class Sprite extends Rectangle {
     this.canvasContext = options.context;
     this.maxDirectionalSpeed = options.maxDirectionalSpeed;
     this.vector = options.initialVector;
-
-    this.updateLastPosition();
   }
 
   set container(container: Rectangle) {
@@ -48,7 +45,7 @@ export default class Sprite extends Rectangle {
 
   moveTo(newPosition: Point): void {
     this.canvasContext.clearRect(this.position.x - 1, this.position.y - 1, this.size.width + 2, this.size.height + 2);
-    this.position = newPosition;
+    this.setPosition(newPosition);
     this.render();
   }
 
@@ -95,12 +92,9 @@ export default class Sprite extends Rectangle {
     this.canvasContext.closePath();
   }
 
-  protected setPosition(newPosition: Point): void {
-    this.lastPosition.x = this.position.x;
-    this.lastPosition.y = this.position.y;
-
-    this.position.x = newPosition.x;
-    this.position.y = newPosition.y;
+  private setPosition(newPosition: Point): void {
+    this.lastPosition = new Point(this.position.x, this.position.y);
+    this.position = new Point(newPosition.x, newPosition.y);
   }
 
   private willCollideTopOrBottom(): boolean {
@@ -111,22 +105,5 @@ export default class Sprite extends Rectangle {
   private willCollideLeftOrRight(): boolean {
     let xRect = new Rectangle(this.position.x + this.vector.x, this.position.y, this.size.width, this.size.height);
     return (xRect.position.x < 0 || xRect.position.x + xRect.size.width > this.container.size.width)
-  }
-
-  private updateLastPosition(): void {
-    if (!this.lastPosition) {
-      this.lastPosition = new Point(this.position.x, this.position.y);
-      return;
-    }
-
-    this.lastPosition.x = this.position.x;
-    this.lastPosition.y = this.position.y;
-  }
-
-  private updatePosition(newPosition: Point) {
-    this.updateLastPosition();
-
-    this.position.x = newPosition.x;
-    this.position.y = newPosition.y;
   }
 }
