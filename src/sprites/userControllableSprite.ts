@@ -49,7 +49,7 @@ export default class UserControllableSprite extends JarSprite {
     document.onkeydown = this.processKeyPress.bind(this);
     document.onkeyup = this.processKeyUp.bind(this);
     document.onclick =this.processClick.bind(this);
-    document.onmousedown = this.setLeftButtonState.bind(this);
+    document.onmousedown = this.processClick.bind(this);
     document.onmouseup = this.setLeftButtonState.bind(this);
     document.onmousemove = this.processClick.bind(this);
   }
