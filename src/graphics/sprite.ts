@@ -44,7 +44,8 @@ export default class Sprite extends Rectangle {
   }
 
   moveTo(newPosition: Point): void {
-    this.canvasContext.clearRect(this.position.x - 1, this.position.y - 1, this.size.width + 2, this.size.height + 2);
+    this.canvasContext.clearRect(this.position.x - 1, this.position.y - 1,
+      this.size.width + 2, this.size.height + 2);
     this.setPosition(newPosition);
     this.render();
   }
@@ -62,27 +63,47 @@ export default class Sprite extends Rectangle {
     this.reverseYVector();
   }
 
-  bounceOffRectangleIfIntersecting(rectangle: Rectangle): void {
-    let yRect = new Rectangle(this.position.x, this.position.y + this.vector.y, this.size.width, this.size.height);
-    let xRect = new Rectangle(this.position.x + this.vector.x, this.position.y, this.size.width, this.size.height);
+  bounceOffRectangleIfIntersecting(rectangle: Rectangle): boolean {
+    let nextPosition = this.getNextPosition();
+    let yRect = new Rectangle(this.position.x, nextPosition.y, this.size.width, this.size.height);
+    let xRect = new Rectangle(nextPosition.x, this.position.y, this.size.width, this.size.height);
+    let nextRect = new Rectangle(nextPosition.x, nextPosition.y, 
+      this.size.width, this.size.height);
+    
+    let bounced = false;
 
     if (yRect.intersects(rectangle)) {
       this.reverseYVector();
+      bounced = true;
     }
 
     if (xRect.intersects(rectangle)) {
       this.reverseXVector();
+      bounced = true;
     }
+
+    if (!bounced && nextRect.intersects(rectangle)) {
+      this.reverseVector();
+      bounced = true;
+    }
+
+
+    return bounced;
   }
 
-  bounceOffContainer(): void {
-    if (this.willCollideLeftOrRight()) {
+  bounceOffContainer(): boolean {
+    let collidedX = this.willCollideLeftOrRight();
+    let collidedY = this.willCollideTopOrBottom();
+
+    if (collidedX) {
       this.reverseXVector();
     }
 
-    if (this.willCollideTopOrBottom()) {
+    if (collidedY) {
       this.reverseYVector();
     }
+
+    return collidedX || collidedY;
   }
 
   render(): void {
@@ -98,12 +119,20 @@ export default class Sprite extends Rectangle {
   }
 
   private willCollideTopOrBottom(): boolean {
+    if (!this.container) {
+      return false;
+    }
+
     let yRect = new Rectangle(this.position.x, this.position.y + this.vector.y, this.size.width, this.size.height);
-    return (yRect.position.y < 0 || yRect.position.y + yRect.size.height > this.container.size.height)
+    return (yRect.position.y <= 0 || yRect.position.y + yRect.size.height >= this.container.size.height)
   }
 
   private willCollideLeftOrRight(): boolean {
+    if (!this.container) {
+      return false;
+    }
+
     let xRect = new Rectangle(this.position.x + this.vector.x, this.position.y, this.size.width, this.size.height);
-    return (xRect.position.x < 0 || xRect.position.x + xRect.size.width > this.container.size.width)
+    return (xRect.position.x <= 0 || xRect.position.x + xRect.size.width >= this.container.size.width)
   }
 }
