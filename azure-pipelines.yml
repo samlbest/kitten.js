@@ -37,4 +37,5 @@ steps:
       dist/index.html
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-- task: PublishBuildArtifacts@1
+- task: PublishPipelineArtifact@1
+    artifact: kitten.js dist
