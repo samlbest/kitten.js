@@ -9,16 +9,16 @@ export default class Utilities {
 
     static getRandomColor(): string {
       let letters = "0123456789ABCDEF";
-      var color = "#";
-      for (var i = 0; i < 6; i++) {
+      let color = "#";
+      for (let i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)];
       }
       return color;
     }
 
     static extend(...args: object[]): object  {
-        for (var i = 1; i < arguments.length; ++i) {
-          for (var key in arguments[i]) {
+        for (let i = 1; i < arguments.length; ++i) {
+          for (let key in arguments[i]) {
             if (arguments[i].hasOwnProperty(key)) {
                 arguments[0][key] = arguments[i][key];
             }

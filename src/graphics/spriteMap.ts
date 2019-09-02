@@ -44,7 +44,7 @@ export default class SpriteMap {
   }
 
   getAllObstacles(currentSprite: Sprite): Rectangle[] {
-    var elements: Rectangle[] = new Array<Rectangle>();
+    let elements: Rectangle[] = new Array<Rectangle>();
     if (this.mapDomElements) {
       elements = this.getAllDomElements();
     }
@@ -54,9 +54,9 @@ export default class SpriteMap {
 
   getAllDomElements(): Rectangle[] {
     let allElements: any = document.body.getElementsByTagName("div");
-    var objects = new Array<Rectangle>();
+    let objects = new Array<Rectangle>();
 
-    for (var i = 0; i < allElements.length; ++i) {
+    for (let i = 0; i < allElements.length; ++i) {
       let element = allElements[i] as HTMLElement;
       if (element === null || element.offsetParent === null) {
         continue;

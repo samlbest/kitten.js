@@ -7,7 +7,7 @@ export default class ImageSprite extends Sprite {
   }
 
   render(): void {
-    var img = new Image();
+    let img = new Image();
     img.src = this.imagePath;
     this.canvasContext.drawImage(img,
       this.position.x,

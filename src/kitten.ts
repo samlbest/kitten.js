@@ -56,7 +56,7 @@ export default class Kitten {
   }
 
   private createSpawnButton(): HTMLElement {
-    var button = document.createElement("div");
+    let button = document.createElement("div");
     this.container.appendChild(button);
     button.style.right = "6px";
     button.style.top = "6px";
@@ -74,7 +74,7 @@ export default class Kitten {
   };
 
   private createPausePlayButton(): HTMLElement {
-    var button = document.createElement("div");
+    let button = document.createElement("div");
     this.container.appendChild(button);
     button.style.right = "13px";
     button.style.top = "6px";
@@ -114,8 +114,8 @@ export default class Kitten {
 
   private createCanvas(): HTMLCanvasElement {
     if (!this.container) {
-      var canvasContainer = document.createElement("div");
-      var body = document.querySelector("body");
+      let canvasContainer = document.createElement("div");
+      let body = document.querySelector("body");
       document.body.appendChild(canvasContainer);
       canvasContainer.style.position = "absolute";
       canvasContainer.style.left = "0px";
@@ -128,10 +128,9 @@ export default class Kitten {
       this.parentContainer = body;
       this.container = canvasContainer;
 
-
       window.onresize = () => {
-        var newHeight = this.parentContainer.scrollHeight;
-        var newWidth = this.parentContainer.scrollWidth;
+        let newHeight = this.parentContainer.scrollHeight;
+        let newWidth = this.parentContainer.scrollWidth;
 
         this.canvas.style.width = newWidth + "px";
         this.canvas.style.height = newHeight + "px";
@@ -140,11 +139,11 @@ export default class Kitten {
       };
     }
 
-    var canvas = document.createElement("canvas");
-    canvas.style.width = canvasContainer.scrollWidth + "px";
-    canvas.style.height = canvasContainer.scrollHeight + "px";
-    canvas.width = canvasContainer.scrollWidth;
-    canvas.height = canvasContainer.scrollHeight;
+    let canvas = document.createElement("canvas");
+    canvas.style.width = this.container.scrollWidth + "px";
+    canvas.style.height = this.container.scrollHeight + "px";
+    canvas.width = this.container.scrollWidth;
+    canvas.height = this.container.scrollHeight;
     canvas.style.overflow = "visible";
     canvas.style.position = "absolute";
 
