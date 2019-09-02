@@ -13,7 +13,7 @@ export default class UserControllableSprite extends JarSprite {
 
   private currentDirections: string[] = [];
 
-  private mouseDown: number = 0;
+  private leftMouseButtonOnlyDown: boolean = false;
 
   private speed: number;
   private initialized: boolean = false;
@@ -49,29 +49,21 @@ export default class UserControllableSprite extends JarSprite {
     document.onkeydown = this.processKeyPress.bind(this);
     document.onkeyup = this.processKeyUp.bind(this);
     document.onclick =this.processClick.bind(this);
-    document.onmousedown = this.processMouseDown.bind(this);
-    document.onmouseup = this.processMouseUp.bind(this);
+    document.onmousedown = this.setLeftButtonState.bind(this);
+    document.onmouseup = this.setLeftButtonState.bind(this);
     document.onmousemove = this.processClick.bind(this);
   }
 
-  private processMouseDown(event: MouseEvent): void {
-    if (event.which === this.LEFT_MOUSE) {
-      ++this.mouseDown;
-    }
-  }
-
-  private processMouseUp(event: MouseEvent): void {
-    if (event.which === this.LEFT_MOUSE) {
-      --this.mouseDown;
-    }
-  }
-
-  private isClicking(): boolean {
-    return this.mouseDown !== 0;
+  private setLeftButtonState(event: MouseEvent): void {
+    this.leftMouseButtonOnlyDown = event.buttons === undefined 
+      ? event.which === this.LEFT_MOUSE 
+      : event.buttons === this.LEFT_MOUSE;
   }
 
   private processClick(event: MouseEvent): void {
-    if (this.isClicking()) {
+    this.setLeftButtonState(event);
+
+    if (this.leftMouseButtonOnlyDown) {
       this.moveTo(new Point(event.pageX - this.size.width/2, event.pageY - this.size.height/2));
     }
   }
