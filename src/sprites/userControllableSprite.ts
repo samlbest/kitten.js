@@ -9,6 +9,8 @@ export default class UserControllableSprite extends JarSprite {
   private readonly ARROW_UP: string = "ArrowUp";
   private readonly ARROW_LEFT: string = "ArrowLeft";
   private readonly ARROW_RIGHT: string = "ArrowRight";
+  private readonly LEFT_MOUSE: number = 1;
+
   private currentDirections: string[] = [];
 
   private mouseDown: number = 0;
@@ -53,11 +55,15 @@ export default class UserControllableSprite extends JarSprite {
   }
 
   private processMouseDown(event: MouseEvent): void {
-    ++this.mouseDown;
+    if (event.which === this.LEFT_MOUSE) {
+      ++this.mouseDown;
+    }
   }
 
   private processMouseUp(event: MouseEvent): void {
-    --this.mouseDown;
+    if (event.which === this.LEFT_MOUSE) {
+      --this.mouseDown;
+    }
   }
 
   private isClicking(): boolean {
@@ -66,7 +72,7 @@ export default class UserControllableSprite extends JarSprite {
 
   private processClick(event: MouseEvent): void {
     if (this.isClicking()) {
-      this.moveTo(new Point(event.clientX - this.size.width/2, event.clientY - this.size.height/2));
+      this.moveTo(new Point(event.pageX - this.size.width/2, event.pageY - this.size.height/2));
     }
   }
 
