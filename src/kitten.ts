@@ -8,6 +8,7 @@ import Utilities from "./graphics/utilities";
 import JarSprite from "./sprites/jarSprite";
 import DogSprite from "./sprites/dogSprite";
 import ColorChangingRectangleSprite from "./sprites/colorChangingRectangleSprite";
+import UserControllableSprite from "./sprites/userControllableSprite";
 
 export default class Kitten {
   readonly version = "0.01";
@@ -17,6 +18,7 @@ export default class Kitten {
   private canvas: HTMLCanvasElement;
   private spriteMap: SpriteMap;
   private loop: any;
+  private spawnedUserSprite: boolean = false;
 
   constructor() {
     this.init();
@@ -96,7 +98,6 @@ export default class Kitten {
   }
 
   private getRandomSprite(): Sprite {
-    
     let speed = Utilities.randomFloatFromInterval(1, 5);
     let size = Utilities.randomFloatFromInterval(15, 150);
 
@@ -108,8 +109,18 @@ export default class Kitten {
       initialVector: new Vector(speed, speed)
     };
 
-    let sprites = [new CatSprite(options), new DogSprite(options), new JarSprite(options), new ColorChangingRectangleSprite(1000, options)];
-    return sprites[Utilities.randomIntFromInterval(0, sprites.length - 1)];
+    let sprites = [new UserControllableSprite(options),
+      new CatSprite(options), 
+      new DogSprite(options), 
+      new JarSprite(options), 
+      new ColorChangingRectangleSprite(1000, options)];
+
+    let random = sprites[Utilities.randomIntFromInterval(this.spawnedUserSprite ? 1 : 0, sprites.length - 1)];
+    if (random instanceof UserControllableSprite) {
+      this.spawnedUserSprite = true;
+    }
+
+    return random;
   }
 
   private createCanvas(): HTMLCanvasElement {
