@@ -1,4 +1,4 @@
-import SpriteMap from "./graphics/spritemap";
+import SpriteMap from "./graphics/spriteMap";
 import CatSprite from "./sprites/catSprite";
 import Point from "./graphics/point";
 import Size from "./graphics/size";
