@@ -33,23 +33,6 @@ export default class Sprite extends Rectangle {
     return new Point(this.position.x + this.vector.x, this.position.y + this.vector.y);
   }
 
-  updateLastPosition(): void {
-    if (!this.lastPosition) {
-      this.lastPosition = new Point(this.position.x, this.position.y);
-      return;
-    }
-
-    this.lastPosition.x = this.position.x;
-    this.lastPosition.y = this.position.y;
-  }
-
-  updatePosition(newPosition: Point) {
-    this.updateLastPosition();
-
-    this.position.x = newPosition.x;
-    this.position.y = newPosition.y;
-  }
-
   set vector(newVector: Vector) {
     this._vector.x = Math.abs(newVector.x) > this.maxDirectionalSpeed ? this.maxDirectionalSpeed : newVector.x;
     this._vector.y = Math.abs(newVector.y) > this.maxDirectionalSpeed ? this.maxDirectionalSpeed : newVector.y;
@@ -82,13 +65,6 @@ export default class Sprite extends Rectangle {
     this.reverseYVector();
   }
 
-  randomizeVector(): void {
-    var newVector = new Vector(this.vector.x + Utilities.randomIntFromInterval(-3, 3),
-      this.vector.y + Utilities.randomIntFromInterval(-3, 3));
-
-    this.vector = newVector;
-  }
-
   bounceOffRectangleIfIntersecting(rectangle: Rectangle): void {
     let yRect = new Rectangle(this.position.x, this.position.y + this.vector.y, this.size.width, this.size.height);
     let xRect = new Rectangle(this.position.x + this.vector.x, this.position.y, this.size.width, this.size.height);
@@ -112,16 +88,6 @@ export default class Sprite extends Rectangle {
     }
   }
 
-  willCollideTopOrBottom(): boolean {
-    let yRect = new Rectangle(this.position.x, this.position.y + this.vector.y, this.size.width, this.size.height);
-    return (yRect.position.y < 0 || yRect.position.y + yRect.size.height > this.container.size.height)
-  }
-
-  willCollideLeftOrRight(): boolean {
-    let xRect = new Rectangle(this.position.x + this.vector.x, this.position.y, this.size.width, this.size.height);
-    return (xRect.position.x < 0 || xRect.position.x + xRect.size.width > this.container.size.width)
-  }
-
   render(): void {
     this.canvasContext.beginPath();
     this.canvasContext.fillStyle = 'green';
@@ -132,6 +98,33 @@ export default class Sprite extends Rectangle {
   protected setPosition(newPosition: Point): void {
     this.lastPosition.x = this.position.x;
     this.lastPosition.y = this.position.y;
+
+    this.position.x = newPosition.x;
+    this.position.y = newPosition.y;
+  }
+
+  private willCollideTopOrBottom(): boolean {
+    let yRect = new Rectangle(this.position.x, this.position.y + this.vector.y, this.size.width, this.size.height);
+    return (yRect.position.y < 0 || yRect.position.y + yRect.size.height > this.container.size.height)
+  }
+
+  private willCollideLeftOrRight(): boolean {
+    let xRect = new Rectangle(this.position.x + this.vector.x, this.position.y, this.size.width, this.size.height);
+    return (xRect.position.x < 0 || xRect.position.x + xRect.size.width > this.container.size.width)
+  }
+
+  private updateLastPosition(): void {
+    if (!this.lastPosition) {
+      this.lastPosition = new Point(this.position.x, this.position.y);
+      return;
+    }
+
+    this.lastPosition.x = this.position.x;
+    this.lastPosition.y = this.position.y;
+  }
+
+  private updatePosition(newPosition: Point) {
+    this.updateLastPosition();
 
     this.position.x = newPosition.x;
     this.position.y = newPosition.y;

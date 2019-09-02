@@ -3,4 +3,8 @@ export default class Size {
         this.width = width;
         this.height = height;
     }
+
+    equals(other: Size): boolean {
+      return this.width === other.width && this.height === other.height;
+    }
 }
