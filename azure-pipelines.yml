@@ -28,3 +28,13 @@ steps:
   inputs:
     testRunner: JUnit
     testResultsFiles: '**/junit.xml'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: |
+      dist/kitten.js
+      dist/index.html
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
