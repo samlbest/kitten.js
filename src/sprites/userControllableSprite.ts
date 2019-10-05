@@ -46,12 +46,23 @@ export default class UserControllableSprite extends JarSprite {
   }
 
   private setEventHandlers(): void {
-    document.onkeydown = this.processKeyPress.bind(this);
-    document.onkeyup = this.processKeyUp.bind(this);
-    document.onclick =this.processClick.bind(this);
-    document.onmousedown = this.processClick.bind(this);
-    document.onmouseup = this.setLeftButtonState.bind(this);
-    document.onmousemove = this.processClick.bind(this);
+    // Arrow key handlers
+    this.addEventListener("keydown", this.processKeyPress);
+    this.addEventListener("keyup", this.processKeyPress);
+
+    // Mouse handlers
+    this.addEventListener("click", this.processClick);
+    this.addEventListener("mousedown", this.processClick);
+    this.addEventListener("mouseup", this.setLeftButtonState);
+    this.addEventListener("mousemove", this.processClick);
+
+    // Touch handlers
+    this.addEventListener("touchstart", this.processTap);
+    this.addEventListener("touchmove", this.processTap);
+  }
+
+  private addEventListener(name: string, handler: (event: Event) => void, passive: boolean = false) {
+    document.addEventListener(name, handler.bind(this), { passive: passive });
   }
 
   private setLeftButtonState(event: MouseEvent): void {
@@ -65,6 +76,15 @@ export default class UserControllableSprite extends JarSprite {
 
     if (this.leftMouseButtonOnlyDown) {
       this.moveTo(new Point(event.pageX - this.size.width/2, event.pageY - this.size.height/2));
+    }
+  }
+
+  private processTap(event: TouchEvent): void {
+    event.preventDefault(); // Prevent handling as mouse event
+
+    if (event.touches.length === 1) {
+      let touch = event.touches[0];
+      this.moveTo(new Point(touch.pageX - this.size.width/2, touch.pageY - this.size.height/2));
     }
   }
 
