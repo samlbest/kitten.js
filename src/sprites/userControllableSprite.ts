@@ -14,6 +14,7 @@ export default class UserControllableSprite extends JarSprite {
   private currentDirections: string[] = [];
 
   private leftMouseButtonOnlyDown: boolean = false;
+  private touchMoveInProgress: boolean = false;
 
   private speed: number;
   private initialized: boolean = false;
@@ -59,6 +60,7 @@ export default class UserControllableSprite extends JarSprite {
     // Touch handlers
     this.addEventListener("touchstart", this.processTap);
     this.addEventListener("touchmove", this.processTap);
+    this.addEventListener("touchend", this.setTouchState)
   }
 
   private addEventListener(name: string, handler: (event: Event) => void, passive: boolean = false) {
@@ -79,10 +81,21 @@ export default class UserControllableSprite extends JarSprite {
     }
   }
 
+  private setTouchState(event: TouchEvent): void {
+    if (event.type === "touchend") {
+      this.touchMoveInProgress = false;
+      return;
+    }
+    
+    this.touchMoveInProgress = this.touchMoveInProgress || event.touches.length >= 3;
+  }
+
   private processTap(event: TouchEvent): void {
     // Tap with 3+ fingers to start, then use one to move. Prevents overriding
     // standard touch behavior such as scrolling and navigation.
-    if (event.touches.length > 2 || event.type === "touchmove") {
+    this.setTouchState(event);
+
+    if (this.touchMoveInProgress) {
       event.preventDefault(); // Prevent handling as mouse event
       let touch = event.touches[0];
       this.moveTo(new Point(touch.pageX - this.size.width/2, touch.pageY - this.size.height/2));
