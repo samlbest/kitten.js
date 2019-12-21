@@ -80,9 +80,8 @@ export default class UserControllableSprite extends JarSprite {
   }
 
   private processTap(event: TouchEvent): void {
-    event.preventDefault(); // Prevent handling as mouse event
-
-    if (event.touches.length === 1) {
+    if (event.touches.length > 1) {
+      event.preventDefault(); // Prevent handling as mouse event
       let touch = event.touches[0];
       this.moveTo(new Point(touch.pageX - this.size.width/2, touch.pageY - this.size.height/2));
     }
