@@ -82,11 +82,11 @@ export default class UserControllableSprite extends JarSprite {
   }
 
   private setTouchState(event: TouchEvent): void {
-    if (event.type === "touchend") {
+    if (event.type === "touchend" && event.touches.length === 0) {
       this.touchMoveInProgress = false;
       return;
     }
-    
+
     this.touchMoveInProgress = this.touchMoveInProgress || event.touches.length >= 3;
   }
 
