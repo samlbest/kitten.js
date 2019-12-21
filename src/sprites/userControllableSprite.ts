@@ -80,7 +80,9 @@ export default class UserControllableSprite extends JarSprite {
   }
 
   private processTap(event: TouchEvent): void {
-    if (event.touches.length > 1) {
+    // Tap with 3+ fingers to start, then use one to move. Prevents overriding
+    // standard touch behavior such as scrolling and navigation.
+    if (event.touches.length > 2 || event.type === "touchmove") {
       event.preventDefault(); // Prevent handling as mouse event
       let touch = event.touches[0];
       this.moveTo(new Point(touch.pageX - this.size.width/2, touch.pageY - this.size.height/2));
