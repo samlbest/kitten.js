@@ -60,10 +60,10 @@ export default class Kitten {
   private createSpawnButton(): HTMLElement {
     let button = document.createElement("div");
     this.container.appendChild(button);
-    button.style.right = "6px";
-    button.style.top = "6px";
-    button.style.width = "5px";
-    button.style.height = "5px";
+    button.style.right = "9px";
+    button.style.top = "9px";
+    button.style.width = "8px";
+    button.style.height = "8px";
     button.style.background = "#fc1ed3";
     button.style.position = "absolute";
     button.style.zIndex = "10000";
@@ -78,10 +78,10 @@ export default class Kitten {
   private createPausePlayButton(): HTMLElement {
     let button = document.createElement("div");
     this.container.appendChild(button);
-    button.style.right = "13px";
-    button.style.top = "6px";
-    button.style.width = "5px";
-    button.style.height = "5px";
+    button.style.left = "9px";
+    button.style.top = "9px";
+    button.style.width = "8px";
+    button.style.height = "8px";
     button.style.background = "#921efc";
     button.style.position = "absolute";
     button.style.zIndex = "10000";
